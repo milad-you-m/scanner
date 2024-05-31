@@ -1,0 +1,14 @@
+import is identifier
+for is keyword
+sum is identifier
+a32tgc is identifier
++6.76 is float
+-875432 is intiger
+compiler is identifier
+++ is operator
+eof is identifier
+if is keyword
+-- is operator
+or is identifier
+-.765 is float
+456 is intiger
