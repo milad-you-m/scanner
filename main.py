@@ -5,9 +5,11 @@ point = '.'
 exponent = ('e','E')
 sign = ('+','-')
 ch = ('(',')','{','}')
+operator = ('+','-','*','/','++','--','+=','-=','*=','/=')
 
 class scanner :
     def __init__(self) :
+        self.next = 0
         self.state = 0
         self.char = ''
         self.word = ''
@@ -16,245 +18,370 @@ class scanner :
 
     def scan(self):
         while True :
-            self.char = self.file.read(1)
-            self.char.lower()
-            self.word += self.char
+            if (self.next == self.state):
+                self.char = self.file.read(1)
+                if ((self.char==" " or self.char=="\n")and self.state==0) :
+                    continue
+                self.char = self.char.lower()
+                self.word += self.char
+            else :
+                self.state = self.next
             match self.state :
                 case 0:     #intiger DFA (q0)
                     if  self.char  in num:
                         self.state = 1
+                        self.next = 1
                     elif self.char in sign :
                         self.state = 2
+                        self.next = 2
                     else :
-                        self.state = 6
-                case 1:     #intiger DFA (q1)
+                        self.next = 6
+                case 1:     
                     if self.char in num :
                         self.state = 1
+                        self.next = 1
                     elif self.char in exponent :
                         self.state = 3
+                        self.next = 3
                     elif self.char == " " or self.char == "\n" :
-                        self.output.write(self.word,' is intiger\n')
+                        self.output.write(self.word[:self.word.__len__()-1]+' is intiger\n')
                         self.word = ''
                         self.state = 0
+                        self.next = 0
                     else :
-                        self.state = 8
-                case 2:    #intiger DFA (q2)
+                        self.next = 8
+                case 2:   
                     if self.char in num :
                         self.state = 1
+                        self.next = 1
                     else :
-                        self.state = 8
-                case 3:   #intiger DFA (q3)
+                        self.next = 8
+                case 3:   
                     if self.char in num :
                         self.state = 5
+                        self.next = 5
                     elif self.char in sign :
                         self.state = 4
+                        self.next = 4
                     else :
-                        self.output.write(self.word,' is not recognized\n')
+                        if (self.word in operator ):
+                            self.output.write(self.word +' is operator\n')
+                        else :
+                            self.output.write(self.word[:self.word.__len__()-1]+' is not recognized\n')
                         self.word = ''
                         self.state = 0
-                case 4: #intiger DFA (q4)
+                        self.next = 0
+                case 4:
                     if self.char in num :
                         self.state = 5
+                        self.next = 5
                     else :
-                        self.output.write(self.word,' is not recognized\n')
+                        if (self.word in operator ):
+                            self.output.write(self.word +' is operator\n')
+                        else :
+                            self.output.write(self.word[:self.word.__len__()-1]+' is not recognized\n')
                         self.word = ''
                         self.state = 0
-                case 5:  #intiger DFA (q5)
+                        self.next = 0
+                case 5:  
                     if self.char in num :
                         self.state = 5
-                    elif self.char == " " or self.char == "\n" :
-                        self.output.write(self.word,' is intiger\n')
+                        self.next = 5
+
+                        self.output.write(self.word[:self.word.__len__()-1]+' is intiger\n')
                         self.word = ''
                         self.state = 0
+                        self.next = 0
                     else :
-                        self.output.write(self.word,' is not recognized\n')
+                        if (self.word in operator ):
+                            self.output.write(self.word +' is operator\n')
+                        else :
+                            self.output.write(self.word[:self.word.__len__()-1]+' is not recognized\n')
                         self.word = ''
                         self.state = 0
+                        self.next = 0
                 case 6: #float DFA (q6)
                     if self.char == point :
                         self.state = 7
+                        self.next = 7
                     else :
-                        self.state = 16
-                case 7: #float DFA (q7)
+                        self.next = 16
+                case 7: 
                     if self.char in num :
                         self.state = 10
+                        self.next = 10
                     else :
-                        self.output.write(self.word,' is not recognized\n')
+                        if (self.word in operator ):
+                            self.output.write(self.word +' is operator\n')
+                        else :
+                            self.output.write(self.word[:self.word.__len__()-1]+' is not recognized\n')
                         self.word = ''
                         self.state = 0
-                case 8: #float DFA (q8)
+                        self.next = 0
+                case 8: 
                     if self.char == point :
                         self.state = 7
+                        self.next = 7
                     elif self.char in num :
                         self.state = 9
-                    else :
-                        self.output.write(self.word,' is not recognized\n')
+                        self.next = 9
+                    else:
+                        if (self.word in operator ):
+                            self.output.write(self.word +' is operator\n')
+                        else :
+                            self.output.write(self.word[:self.word.__len__()-1]+' is not recognized\n')
                         self.word = ''
                         self.state = 0
-                case 9: #float DFA (q9)
+                        self.next = 0
+                case 9:
                     if self.char in num :
                         self.state = 9
+                        self.next = 9
                     elif self.char == point :
                         self.state = 11
+                        self.next = 11
                     else :
-                        self.output.write(self.word,' not recognized\n')
+                        if (self.word in operator ):
+                            self.output.write(self.word +' is operator\n')
+                        else :
+                            self.output.write(self.word[:self.word.__len__()-1]+' not recognized\n')
                         self.word = ''
                         self.state = 0
-                case 10: #float DFA (q10)
+                        self.next = 0
+                case 10:
                     if self.char in num :
                         self.state = 10
+                        self.next = 10
                     elif self.char in exponent :
                         self.state = 13
+                        self.next = 13
                     elif self.char == " " or self.char == "\n" :
-                        self.output.write(self.word,' is float\n')
+                        self.output.write(self.word[:self.word.__len__()-1]+' is float\n')
                         self.word = ''
                         self.state = 0
+                        self.next = 0
                     else :
-                        self.output.write(self.word,' not recognized\n')
+                        if (self.word in operator ):
+                            self.output.write(self.word +' is operator\n')
+                        else :
+                            self.output.write(self.word[:self.word.__len__()-1]+' not recognized\n')
                         self.word = ''
                         self.state = 0
-                case 11: #float DFA (q11)
+                        self.next = 0
+                case 11: 
                     if self.char in num :
                         self.state = 12
+                        self.next = 12
                     elif self.char in exponent :
                         self.state = 13
+                        self.next = 13
                     elif self.char == " " or self.char == "\n" :
-                        self.output.write(self.word,' is float\n')
+                        self.output.write(self.word[:self.word.__len__()-1]+' is float\n')
                         self.word = ''
                         self.state = 0
+                        self.next = 0
                     else :
-                        self.output.write(self.word,' is not recognized\n')
+                        if (self.word in operator ):
+                            self.output.write(self.word +' is operator\n')
+                        else :
+                            self.output.write(self.word[:self.word.__len__()-1]+' is not recognized\n')
                         self.word = ''
                         self.state = 0
-                case 12: #float DFA (q12)
+                        self.next = 0
+                case 12:
                     if self.char in num :
                         self.state = 12
+                        self.next = 12
                     elif self.char in exponent :
                         self.state = 13
+                        self.next = 13
                     elif self.char == " " or self.char == "\n" :
-                        self.output.write(self.word,' is float\n')
+                        self.output.write(self.word[:self.word.__len__()-1]+' is float\n')
                         self.word = ''
                         self.state = 0
+                        self.next = 0
                     else :
-                        self.output.write(self.word,' is not recognized\n')
+                        if (self.word in operator ):
+                            self.output.write(self.word +' is operator\n')
+                        else :
+                            self.output.write(self.word[:self.word.__len__()-1]+' is not recognized\n')
                         self.word = ''
                         self.state = 0
-                case 13: #float DFA (q13)
+                        self.next = 0
+                case 13: 
                     if self.char in num :
                         self.state = 15
+                        self.next = 15
                     elif self.char in sign :
                         self.state = 14
+                        self.next = 14
                     else :
-                        self.output.write(self.word,' is not recognized\n')
+                        if (self.word in operator ):
+                            self.output.write(self.word +' is operator\n')
+                        else :
+                            self.output.write(self.word[:self.word.__len__()-1]+' is not recognized\n')
                         self.word = ''
                         self.state = 0
-                case 14: #float DFA (q14)
+                        self.next = 0
+                case 14: 
                     if self.char in num :
                         self.state = 15
+                        self.next = 15
                     else :
-                        self.output.write(self.word,' is not recognized\n')
+                        if (self.word in operator ):
+                            self.output.write(self.word +' is operator\n')
+                        else :
+                            self.output.write(self.word[:self.word.__len__()-1]+' is not recognized\n')
                         self.word = ''
                         self.state = 0
-                case 15: #float DFA (q15)
+                        self.next = 0
+                case 15: 
                     if self.char in num :
                         self.state = 15
+                        self.next = 15
                     elif self.char == " " or self.char == "\n" :
-                        self.output.write(self.word,' is float\n')
+                        self.output.write(self.word[:self.word.__len__()-1]+' is float\n')
                         self.word = ''
                         self.state = 0
+                        self.next = 0
                     else :
-                        self.output.write(self.word,' is not recognized\n')
+                        if (self.word in operator ):
+                            self.output.write(self.word +' is operator\n')
+                        else :
+                            self.output.write(self.word[:self.word.__len__()-1]+' is not recognized\n')
                         self.word = ''
                         self.state = 0
+                        self.next = 0
                 case 16: #identifier DFA (q16)
                     if self.char in alph :
                         self.state = 17
+                        self.next = 17
                     else :
-                        self.state = 18
-                case 17: #identifier DFA (q17)
+                        self.next = 18
+                case 17:
                     if self.char in alph or self.char in num :
                         self.state = 17
+                        self.next = 17
                     elif self.char == " " or self.char == "\n" :
-                        if self.word in keywords :
-                            self.output.write(self.word,' is keyword\n')
+                        if self.word.strip() in keywords :
+                            self.output.write(self.word[:self.word.__len__()-1]+' is keyword\n')
                         else :
-                            self.output.write(self.word,' is identifier\n')
+                            self.output.write(self.word[:self.word.__len__()-1]+' is identifier\n')
                         self.word = ''
                         self.state = 0
+                        self.next = 0
                     else :
-                        self.state = 18
+                        if (self.word in operator ):
+                            self.output.write(self.word +' is operator\n')
+                        else :
+                            self.output.write(self.word[:self.word.__len__()-1]+' is not recognized\n')
+                        self.word = ''
+                        self.state = 0
+                        self.next = 0
                 case 18: #string DFA (q18)
                     if self.char == '"' :
                         self.state = 19
+                        self.next = 19
                     else :
-                        self.state = 21
-                case 19: #string DFA (q19)
+                        self.next = 21
+                case 19: 
                     if self.char != '"' :
                         self.state = 19
+                        self.next = 19
                     else :
                         self.state = 20
-                case 20: #string DFA (q20)
-                    self.output.write(self.word,' is string\n')
+                        self.next = 20
+                case 20: 
+                    self.output.write(self.word[:self.word.__len__()-1]+' is string\n')
                     self.word = ''
                     self.state = 0
+                    self.next = 0
                 case 21: #char DFA (q21)
                     if self.char == "'" :
                         self.state = 22
+                        self.next = 22
                     else :
-                        self.state = 25
-                case 22: #char DFA (q22)
+                        self.next = 25
+                case 22: 
                     if self.char != "'" :
                         self.state = 23
+                        self.next = 23
                     else :
-                        self.output.write(self.word,' is not recognized\n')
-                        self.word = ''
-                        self.state = 0
-                case 23: #char DFA (q23)
+                        self.state = 24
+                        self.next = 24
+                case 23: 
                     if self.char == "'" :
                         self.state = 24
+                        self.next = 24
                     else :
-                        self.output.write(self.word,' is not recognized\n')
+                        if (self.word in operator ):
+                            self.output.write(self.word +' is operator\n')
+                        else :
+                            self.output.write(self.word[:self.word.__len__()-1]+' is not recognized\n')
                         self.word = ''
                         self.state = 0
-                case 24: #char DFA (q24)
-                    self.output.write(self.word,' is charachter\n')
+                        self.next = 0
+                case 24: 
+                    self.output.write(self.word[:self.word.__len__()-1]+' is charachter\n')
                     self.word = ''
                     self.state = 0
+                    self.next = 0
                 case 25: #comment DFA (q25)
                     if self.char == '/' :
                         self.state = 26
+                        self.next = 26
                     else :
-                        self.output.write(self.word,' is not recognized\n')
+                        if (self.word in operator ):
+                            self.output.write(self.word +' is operator\n')
+                        else :
+                            self.output.write(self.word[:self.word.__len__()-1]+' is not recognized\n')
                         self.word = ''
                         self.state = 0
-                case 26: #comment DFA (q26)
+                        self.next = 0
+                case 26: 
                     if self.char == '/' :
                         self.state = 27
+                        self.next = 27
                     elif self.char == '*' :
                         self.state = 29
+                        self.next = 29
                     else :
-                        self.output.write(self.word,' is not recognized\n')
+                        if (self.word in operator ):
+                            self.output.write(self.word +' is operator\n')
+                        else :
+                            self.output.write(self.word[:self.word.__len__()-1]+' is not recognized\n')
                         self.word = ''
                         self.state = 0
-                case 27: #comment DFA (q27)
+                        self.next = 0
+                case 27: 
                     if self.char != '\n' :
                         self.state = 27
+                        self.next = 27
                     else :
                         self.state = 28
-                case 28: #comment DFA (q28)
+                        self.next = 28
+                case 28:
                     self.word = ''
                     self.state = 0
-                case 29: #comment DFA (q29)
+                    self.next = 0
+                case 29: 
                     if self.char != '*' :
                         self.state = 29
+                        self.next = 29
                     else :
                         self.state = 30
-                case 30: #comment DFA (q30)
+                        self.next = 30
+                case 30: 
                     if self.char == '/' :
                         self.state = 28
+                        self.next = 28
                     else :
                         self.state = 29
-        
+                        self.next = 29
+            if self.char == '' :
+                break
+            else :
+                continue
         
         self.file.close()
         self.output.close()
