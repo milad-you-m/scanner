@@ -4,7 +4,7 @@ keywords = ('int', 'float', 'if', 'else', 'while', 'for','long', 'double')
 point = '.'
 exponent = ('e','E')
 sign = ('+','-')
-ch = ('(',')','{','}')
+symbol = ('(',')','{','}')
 operator = ('+','-','*','/','++','--','+=','-=','*=','/=')
 
 class scanner :
@@ -15,6 +15,7 @@ class scanner :
         self.word = ''
         self.file = open('./input.txt', 'r')
         self.output = open('./output.txt', 'w')
+        self.output.write('-------------This is the output of the scanner------------')
 
     def scan(self):
         while True :
@@ -44,7 +45,7 @@ class scanner :
                         self.state = 3
                         self.next = 3
                     elif self.char == " " or self.char == "\n" :
-                        self.output.write(self.word[:self.word.__len__()-1]+' is intiger\n')
+                        self.output.write('\n'+self.word[:self.word.__len__()-1]+' is intiger')
                         self.word = ''
                         self.state = 0
                         self.next = 0
@@ -65,41 +66,57 @@ class scanner :
                         self.next = 4
                     else :
                         if (self.word in operator ):
-                            self.output.write(self.word +' is operator\n')
+                            self.output.write('\n'+self.word +' is operator')
+                            self.word = ''
+                            self.state = 0
+                            self.next = 0
+                        elif (self.word in symbol ):
+                            self.output.write('\n'+self.word +' is symbol')
+                            self.word = ''
+                            self.state = 0
+                            self.next = 0
                         else :
-                            self.output.write(self.word[:self.word.__len__()-1]+' is not recognized\n')
-                        self.word = ''
-                        self.state = 0
-                        self.next = 0
+                            self.next = -1
+                        
                 case 4:
                     if self.char in num :
                         self.state = 5
                         self.next = 5
                     else :
                         if (self.word in operator ):
-                            self.output.write(self.word +' is operator\n')
+                            self.output.write('\n'+self.word +' is operator')
+                            self.word = ''
+                            self.state = 0
+                            self.next = 0
+                        elif (self.word in symbol ):
+                            self.output.write('\n'+self.word +' is symbol')
+                            self.word = ''
+                            self.state = 0
+                            self.next = 0
                         else :
-                            self.output.write(self.word[:self.word.__len__()-1]+' is not recognized\n')
-                        self.word = ''
-                        self.state = 0
-                        self.next = 0
+                            self.next = -1
                 case 5:  
                     if self.char in num :
                         self.state = 5
                         self.next = 5
-
-                        self.output.write(self.word[:self.word.__len__()-1]+' is intiger\n')
+                    elif self.char == " " or self.char == "\n" or self.char == '':
+                        self.output.write('\n'+self.word[:self.word.__len__()-1]+' is intiger')
                         self.word = ''
                         self.state = 0
                         self.next = 0
                     else :
                         if (self.word in operator ):
-                            self.output.write(self.word +' is operator\n')
+                            self.output.write('\n'+self.word +' is operator')
+                            self.word = ''
+                            self.state = 0
+                            self.next = 0
+                        elif (self.word in symbol ):
+                            self.output.write('\n'+self.word +' is symbol')
+                            self.word = ''
+                            self.state = 0
+                            self.next = 0
                         else :
-                            self.output.write(self.word[:self.word.__len__()-1]+' is not recognized\n')
-                        self.word = ''
-                        self.state = 0
-                        self.next = 0
+                            self.next = -1
                 case 6: #float DFA (q6)
                     if self.char == point :
                         self.state = 7
@@ -112,12 +129,17 @@ class scanner :
                         self.next = 10
                     else :
                         if (self.word in operator ):
-                            self.output.write(self.word +' is operator\n')
+                            self.output.write('\n'+self.word +' is operator')
+                            self.word = ''
+                            self.state = 0
+                            self.next = 0
+                        elif (self.word in symbol ):
+                            self.output.write('\n'+self.word +' is symbol')
+                            self.word = ''
+                            self.state = 0
+                            self.next = 0
                         else :
-                            self.output.write(self.word[:self.word.__len__()-1]+' is not recognized\n')
-                        self.word = ''
-                        self.state = 0
-                        self.next = 0
+                            self.next = -1
                 case 8: 
                     if self.char == point :
                         self.state = 7
@@ -127,12 +149,17 @@ class scanner :
                         self.next = 9
                     else:
                         if (self.word in operator ):
-                            self.output.write(self.word +' is operator\n')
+                            self.output.write('\n'+self.word +' is operator')
+                            self.word = ''
+                            self.state = 0
+                            self.next = 0
+                        elif (self.word in symbol ):
+                            self.output.write('\n'+self.word +' is symbol')
+                            self.word = ''
+                            self.state = 0
+                            self.next = 0
                         else :
-                            self.output.write(self.word[:self.word.__len__()-1]+' is not recognized\n')
-                        self.word = ''
-                        self.state = 0
-                        self.next = 0
+                            self.next = -1
                 case 9:
                     if self.char in num :
                         self.state = 9
@@ -142,12 +169,17 @@ class scanner :
                         self.next = 11
                     else :
                         if (self.word in operator ):
-                            self.output.write(self.word +' is operator\n')
+                            self.output.write('\n'+self.word +' is operator')
+                            self.word = ''
+                            self.state = 0
+                            self.next = 0
+                        elif (self.word in symbol ):
+                            self.output.write('\n'+self.word +' is symbol')
+                            self.word = ''
+                            self.state = 0
+                            self.next = 0
                         else :
-                            self.output.write(self.word[:self.word.__len__()-1]+' not recognized\n')
-                        self.word = ''
-                        self.state = 0
-                        self.next = 0
+                            self.next = -1
                 case 10:
                     if self.char in num :
                         self.state = 10
@@ -156,18 +188,23 @@ class scanner :
                         self.state = 13
                         self.next = 13
                     elif self.char == " " or self.char == "\n" :
-                        self.output.write(self.word[:self.word.__len__()-1]+' is float\n')
+                        self.output.write('\n'+self.word[:self.word.__len__()-1]+' is float')
                         self.word = ''
                         self.state = 0
                         self.next = 0
                     else :
                         if (self.word in operator ):
-                            self.output.write(self.word +' is operator\n')
+                            self.output.write('\n'+self.word +' is operator')
+                            self.word = ''
+                            self.state = 0
+                            self.next = 0
+                        elif (self.word in symbol ):
+                            self.output.write('\n'+self.word +' is symbol')
+                            self.word = ''
+                            self.state = 0
+                            self.next = 0
                         else :
-                            self.output.write(self.word[:self.word.__len__()-1]+' not recognized\n')
-                        self.word = ''
-                        self.state = 0
-                        self.next = 0
+                            self.next = -1
                 case 11: 
                     if self.char in num :
                         self.state = 12
@@ -176,18 +213,23 @@ class scanner :
                         self.state = 13
                         self.next = 13
                     elif self.char == " " or self.char == "\n" :
-                        self.output.write(self.word[:self.word.__len__()-1]+' is float\n')
+                        self.output.write('\n'+self.word[:self.word.__len__()-1]+' is float')
                         self.word = ''
                         self.state = 0
                         self.next = 0
                     else :
                         if (self.word in operator ):
-                            self.output.write(self.word +' is operator\n')
+                            self.output.write('\n'+self.word +' is operator')
+                            self.word = ''
+                            self.state = 0
+                            self.next = 0
+                        elif (self.word in symbol ):
+                            self.output.write('\n'+self.word +' is symbol')
+                            self.word = ''
+                            self.state = 0
+                            self.next = 0
                         else :
-                            self.output.write(self.word[:self.word.__len__()-1]+' is not recognized\n')
-                        self.word = ''
-                        self.state = 0
-                        self.next = 0
+                            self.next = -1
                 case 12:
                     if self.char in num :
                         self.state = 12
@@ -196,18 +238,23 @@ class scanner :
                         self.state = 13
                         self.next = 13
                     elif self.char == " " or self.char == "\n" :
-                        self.output.write(self.word[:self.word.__len__()-1]+' is float\n')
+                        self.output.write('\n'+self.word[:self.word.__len__()-1]+' is float')
                         self.word = ''
                         self.state = 0
                         self.next = 0
                     else :
                         if (self.word in operator ):
-                            self.output.write(self.word +' is operator\n')
+                            self.output.write('\n'+self.word +' is operator')
+                            self.word = ''
+                            self.state = 0
+                            self.next = 0
+                        elif (self.word in symbol ):
+                            self.output.write('\n'+self.word +' is symbol')
+                            self.word = ''
+                            self.state = 0
+                            self.next = 0
                         else :
-                            self.output.write(self.word[:self.word.__len__()-1]+' is not recognized\n')
-                        self.word = ''
-                        self.state = 0
-                        self.next = 0
+                            self.next = -1
                 case 13: 
                     if self.char in num :
                         self.state = 15
@@ -217,41 +264,56 @@ class scanner :
                         self.next = 14
                     else :
                         if (self.word in operator ):
-                            self.output.write(self.word +' is operator\n')
+                            self.output.write('\n'+self.word +' is operator')
+                            self.word = ''
+                            self.state = 0
+                            self.next = 0
+                        elif (self.word in symbol ):
+                            self.output.write('\n'+self.word +' is symbol')
+                            self.word = ''
+                            self.state = 0
+                            self.next = 0
                         else :
-                            self.output.write(self.word[:self.word.__len__()-1]+' is not recognized\n')
-                        self.word = ''
-                        self.state = 0
-                        self.next = 0
+                            self.next = -1
                 case 14: 
                     if self.char in num :
                         self.state = 15
                         self.next = 15
                     else :
                         if (self.word in operator ):
-                            self.output.write(self.word +' is operator\n')
+                            self.output.write('\n'+self.word +' is operator')
+                            self.word = ''
+                            self.state = 0
+                            self.next = 0
+                        elif (self.word in symbol ):
+                            self.output.write('\n'+self.word +' is symbol')
+                            self.word = ''
+                            self.state = 0
+                            self.next = 0
                         else :
-                            self.output.write(self.word[:self.word.__len__()-1]+' is not recognized\n')
-                        self.word = ''
-                        self.state = 0
-                        self.next = 0
+                            self.next = -1
                 case 15: 
                     if self.char in num :
                         self.state = 15
                         self.next = 15
                     elif self.char == " " or self.char == "\n" :
-                        self.output.write(self.word[:self.word.__len__()-1]+' is float\n')
+                        self.output.write('\n'+self.word[:self.word.__len__()-1]+' is float')
                         self.word = ''
                         self.state = 0
                         self.next = 0
                     else :
                         if (self.word in operator ):
-                            self.output.write(self.word +' is operator\n')
+                            self.output.write('\n'+self.word +' is operator')
+                            self.word = ''
+                            self.state = 0
+                            self.next = 0
+                        elif (self.word in symbol ):
+                            self.output.write('\n'+self.word +' is symbol')
+                            self.word = ''
+                            self.state = 0
+                            self.next = 0
                         else :
-                            self.output.write(self.word[:self.word.__len__()-1]+' is not recognized\n')
-                        self.word = ''
-                        self.state = 0
-                        self.next = 0
+                            self.next = -1
                 case 16: #identifier DFA (q16)
                     if self.char in alph :
                         self.state = 17
@@ -264,20 +326,25 @@ class scanner :
                         self.next = 17
                     elif self.char == " " or self.char == "\n" :
                         if self.word.strip() in keywords :
-                            self.output.write(self.word[:self.word.__len__()-1]+' is keyword\n')
+                            self.output.write('\n'+self.word[:self.word.__len__()-1]+' is keyword')
                         else :
-                            self.output.write(self.word[:self.word.__len__()-1]+' is identifier\n')
+                            self.output.write('\n'+self.word[:self.word.__len__()-1]+' is identifier')
                         self.word = ''
                         self.state = 0
                         self.next = 0
                     else :
                         if (self.word in operator ):
-                            self.output.write(self.word +' is operator\n')
+                            self.output.write('\n'+self.word +' is operator')
+                            self.word = ''
+                            self.state = 0
+                            self.next = 0
+                        elif (self.word in symbol ):
+                            self.output.write('\n'+self.word +' is symbol')
+                            self.word = ''
+                            self.state = 0
+                            self.next = 0
                         else :
-                            self.output.write(self.word[:self.word.__len__()-1]+' is not recognized\n')
-                        self.word = ''
-                        self.state = 0
-                        self.next = 0
+                            self.next = -1
                 case 18: #string DFA (q18)
                     if self.char == '"' :
                         self.state = 19
@@ -286,7 +353,7 @@ class scanner :
                         self.next = 21
                 case 19: 
                     if self.char == '' :
-                        self.output.write(self.word[:self.word.__len__()-1].replace('\n', '') + ' is not recognized\n')
+                        self.output.write('\n'+self.word[:self.word.__len__()-1].replace('\n', '') + ' is not recognized')
                     elif self.char != '"' :
                         self.state = 19
                         self.next = 19
@@ -294,7 +361,7 @@ class scanner :
                         self.state = 20
                         self.next = 20
                 case 20: 
-                    self.output.write(self.word[:self.word.__len__()-1]+' is string\n')
+                    self.output.write('\n'+self.word[:self.word.__len__()-1]+' is string')
                     self.word = ''
                     self.state = 0
                     self.next = 0
@@ -317,14 +384,19 @@ class scanner :
                         self.next = 24
                     else :
                         if (self.word in operator ):
-                            self.output.write(self.word +' is operator\n')
+                            self.output.write('\n'+self.word +' is operator')
+                            self.word = ''
+                            self.state = 0
+                            self.next = 0
+                        elif (self.word in symbol ):
+                            self.output.write('\n'+self.word +' is symbol')
+                            self.word = ''
+                            self.state = 0
+                            self.next = 0
                         else :
-                            self.output.write(self.word[:self.word.__len__()-1]+' is not recognized\n')
-                        self.word = ''
-                        self.state = 0
-                        self.next = 0
+                            self.next = -1
                 case 24: 
-                    self.output.write(self.word[:self.word.__len__()-1]+' is charachter\n')
+                    self.output.write('\n'+self.word[:self.word.__len__()-1]+' is charachter')
                     self.word = ''
                     self.state = 0
                     self.next = 0
@@ -334,12 +406,17 @@ class scanner :
                         self.next = 26
                     else :
                         if (self.word in operator ):
-                            self.output.write(self.word +' is operator\n')
+                            self.output.write('\n'+self.word +' is operator')
+                            self.word = ''
+                            self.state = 0
+                            self.next = 0
+                        elif (self.word in symbol ):
+                            self.output.write('\n'+self.word +' is symbol')
+                            self.word = ''
+                            self.state = 0
+                            self.next = 0
                         else :
-                            self.output.write(self.word[:self.word.__len__()-1]+' is not recognized\n')
-                        self.word = ''
-                        self.state = 0
-                        self.next = 0
+                            self.next = -1
                 case 26: 
                     if self.char == '/' :
                         self.state = 27
@@ -349,12 +426,17 @@ class scanner :
                         self.next = 29
                     else :
                         if (self.word in operator ):
-                            self.output.write(self.word +' is operator\n')
+                            self.output.write('\n'+self.word +' is operator')
+                            self.word = ''
+                            self.state = 0
+                            self.next = 0
+                        elif (self.word in symbol ):
+                            self.output.write('\n'+self.word +' is symbol')
+                            self.word = ''
+                            self.state = 0
+                            self.next = 0
                         else :
-                            self.output.write(self.word[:self.word.__len__()-1]+' is not recognized\n')
-                        self.word = ''
-                        self.state = 0
-                        self.next = 0
+                            self.next = -1
                 case 27: 
                     if self.char != '\n' :
                         self.state = 27
@@ -378,6 +460,14 @@ class scanner :
                     else :
                         self.state = 29
                         self.next = 29
+                case -1:
+                    while self.char != ' ' and self.char != '\n' and self.char != '':
+                        self.char = self.file.read(1)
+                        self.word += self.char
+                    self.output.write('\n'+self.word[:self.word.__len__()-1]+' is not recognized')
+                    self.word = ''
+                    self.state = 0
+                    self.next = 0
             if self.char == '' :
                 break
             else :
