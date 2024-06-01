@@ -285,7 +285,9 @@ class scanner :
                     else :
                         self.next = 21
                 case 19: 
-                    if self.char != '"' :
+                    if self.char == '' :
+                        self.output.write(self.word[:self.word.__len__()-1].replace('\n', '') + ' is not recognized\n')
+                    elif self.char != '"' :
                         self.state = 19
                         self.next = 19
                     else :
@@ -358,12 +360,9 @@ class scanner :
                         self.state = 27
                         self.next = 27
                     else :
-                        self.state = 28
-                        self.next = 28
-                case 28:
-                    self.word = ''
-                    self.state = 0
-                    self.next = 0
+                        self.state = 0
+                        self.next = 0
+                        self.word =''
                 case 29: 
                     if self.char != '*' :
                         self.state = 29
@@ -373,8 +372,9 @@ class scanner :
                         self.next = 30
                 case 30: 
                     if self.char == '/' :
-                        self.state = 28
-                        self.next = 28
+                        self.state = 0
+                        self.next = 0
+                        self.word = ''
                     else :
                         self.state = 29
                         self.next = 29

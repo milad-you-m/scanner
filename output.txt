@@ -9,6 +9,7 @@ compiler is identifier
 eof is identifier
 if is keyword
 -- is operator
-or is identifier
+for is keyword
 -.765 is float
 456 is intiger
+"67.987/-*dxt.init()while-76.9870//ali is good is not recognized
